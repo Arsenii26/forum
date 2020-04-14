@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="arsenii">
+        <sql>
+            CREATE TABLE post (
+            post_number INTEGER NOT NULL AUTO_INCREMENT,
+            name VARCHAR(255)  NOT NULL,
+            description VARCHAR(255)  NOT NULL,
+            date_created DATETIME,
+            user_id BIGINT NOT NULL,
+            CONSTRAINT pk_postNumber PRIMARY KEY (post_number)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE post;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2" author="arsenii">
+        <sql>
+            CREATE TABLE post_details (
+            number INTEGER NOT NULL AUTO_INCREMENT,
+            date_created DATETIME,
+            name VARCHAR(255)  NOT NULL,
+            details TEXT NOT NULL,
+            post_number INTEGER NOT NULL,
+            user_id BIGINT NOT NULL,
+            CONSTRAINT pk_detailNumber PRIMARY KEY (number),
+            CONSTRAINT fk_topic_detail FOREIGN KEY (post_number) REFERENCES post(post_number) ON DELETE CASCADE ON UPDATE CASCADE
+            );
+        </sql>
+        <rollback>
+            DROP TABLE post_details;
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="3" author="arsenii">
+    <sql>
+        INSERT INTO post (name, description, date_created, user_id) VALUES('sadfasdfa','kkkkkkkkk', NOW(), 1);
+        INSERT INTO post (name, description, date_created, user_id) VALUES('test2','testttt', NOW(), 1);
+    </sql>
+    <rollback>
+        TRUNCATE TABLE post;
+    </rollback>
+    </changeSet>
+
+</databaseChangeLog>

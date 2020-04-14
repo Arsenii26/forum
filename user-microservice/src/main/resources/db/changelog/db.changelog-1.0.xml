@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet id="1" author="arsenii">
+        <sql>
+            CREATE TABLE user (
+            user_id BIGINT NOT NULL AUTO_INCREMENT,
+            username VARCHAR(255) unique NOT NULL,
+            password VARCHAR(255) NOT NULL,
+            first_name VARCHAR(255) DEFAULT NULL,
+            last_name VARCHAR(255) DEFAULT NULL,
+            email VARCHAR(255) unique NOT NULL,
+            phone VARCHAR(255)  DEFAULT NULL,
+            enabled BOOLEAN NOT NULL default 1,
+            CONSTRAINT pk_id PRIMARY KEY (user_id)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE user;
+        </rollback>
+    </changeSet>
+
+    <changeSet id="2" author="arsenii">
+        <sql>
+            CREATE TABLE role (
+            id BIGINT NOT NULL AUTO_INCREMENT,
+            name VARCHAR(255)  NOT NULL,
+            CONSTRAINT pk_roleId PRIMARY KEY (id)
+            );
+        </sql>
+        <rollback>
+            DROP TABLE role;
+        </rollback>
+    </changeSet>
+<!--   https://stackoverflow.com/questions/21526055/mysql-cannot-create-foreign-key-constraint         -->
+    <changeSet id="3" author="arsenii">
+        <sql>
+            create table users_roles (
+            `user_id` BIGINT NOT NULL,
+            `role_id` BIGINT NOT NULL,
+
+            PRIMARY KEY (`user_id`,`role_id`),
+
+            CONSTRAINT `pk_id` FOREIGN KEY (`user_id`)
+            REFERENCES `user` (`user_id`)
+            ON DELETE NO ACTION ON UPDATE NO ACTION,
+
+            CONSTRAINT `pk_roleId` FOREIGN KEY (`role_id`)
+            REFERENCES `role` (`id`)
+            ON DELETE NO ACTION ON UPDATE NO ACTION
+            );
+        </sql>
+        <rollback>
+            DROP TABLE users_roles;
+        </rollback>
+    </changeSet>
+
+
+    <changeSet id="4" author="arsenii">
+    <sql>
+        INSERT INTO user (username, password, first_name, last_name, email, phone, enabled)
+        VALUES('arsenii2','$2a$10$qFf6uvOSRPXcZ7BzyWsEfu6bUaEFRW15/zlA3j2uBMj0PnMidbP9S','Arsenii','Tiurin','arsenii@sheridan.ca', '4444445', 1);
+    </sql>
+    <rollback>
+        TRUNCATE TABLE user;
+    </rollback>
+
+    </changeSet>
+
+    <changeSet id="5" author="arsenii">
+        <sql>
+            INSERT INTO role (name)
+            VALUES
+            ('ROLE_USER'),('ROLE_ADMIN');
+        </sql>
+        <rollback>
+            TRUNCATE TABLE role;
+        </rollback>
+
+    </changeSet>
+
+
+    <changeSet id="6" author="arsenii">
+        <sql>
+            INSERT INTO `users_roles` (user_id,role_id)
+            VALUES
+            (1, 1),
+            (1, 2)
+        </sql>
+        <rollback>
+            TRUNCATE TABLE users_roles;
+        </rollback>
+
+    </changeSet>
+
+
+</databaseChangeLog>
