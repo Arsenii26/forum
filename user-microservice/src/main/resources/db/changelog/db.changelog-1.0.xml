@@ -6,7 +6,18 @@
         xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
-
+<!--    enabled BOOLEAN NOT NULL default 0,-->
+    <changeSet id="0" author="arsenii">
+        <sql>
+            create table image (
+            image_id int NOT NULL AUTO_INCREMENT primary key,
+            image VARCHAR(255) default null
+            );
+        </sql>
+        <rollback>
+            DROP TABLE course;
+        </rollback>
+    </changeSet>
     <changeSet id="1" author="arsenii">
         <sql>
             CREATE TABLE user (
@@ -18,7 +29,12 @@
             email VARCHAR(255) unique NOT NULL,
             phone VARCHAR(255)  DEFAULT NULL,
             enabled BOOLEAN NOT NULL default 1,
-            CONSTRAINT pk_id PRIMARY KEY (user_id)
+            picture boolean default false,
+            image_id int default null,
+            CONSTRAINT pk_id PRIMARY KEY (user_id),
+            CONSTRAINT `FK_COURSE_IMG` FOREIGN KEY (`image_id`)
+            REFERENCES `image` (`image_id`)
+            ON DELETE CASCADE ON UPDATE NO ACTION
             );
         </sql>
         <rollback>
@@ -65,7 +81,13 @@
     <changeSet id="4" author="arsenii">
     <sql>
         INSERT INTO user (username, password, first_name, last_name, email, phone, enabled)
-        VALUES('arsenii2','$2a$10$qFf6uvOSRPXcZ7BzyWsEfu6bUaEFRW15/zlA3j2uBMj0PnMidbP9S','Arsenii','Tiurin','arsenii@sheridan.ca', '4444445', 1);
+        VALUES
+        ('arsenii2','$2a$10$qFf6uvOSRPXcZ7BzyWsEfu6bUaEFRW15/zlA3j2uBMj0PnMidbP9S','Arsenii','Tiurin','arsenii@sheridan.ca', '4444445', 1),
+        ('aa','$2a$10$qFf6uvOSRPXcZ7BzyWsEfu6bUaEFRW15/zlA3j2uBMj0PnMidbP9S','John','Fred','john123@gmail.com', '34', 1);
+        ('user1','$2a$10$qFf6uvOSRPXcZ7BzyWsEfu6bUaEFRW15/zlA3j2uBMj0PnMidbP9S','Test1','Test2','john111@gmail.com', '23', 1);
+        ('user2','$2a$10$qFf6uvOSRPXcZ7BzyWsEfu6bUaEFRW15/zlA3j2uBMj0PnMidbP9S','Test1','Test2','john222@gmail.com', '1234', 1);
+        ('user3','$2a$10$qFf6uvOSRPXcZ7BzyWsEfu6bUaEFRW15/zlA3j2uBMj0PnMidbP9S','Test1','Test2','alex333@gmail.com', '123456', 1);
+        ('user','$2a$10$qFf6uvOSRPXcZ7BzyWsEfu6bUaEFRW15/zlA3j2uBMj0PnMidbP9S','user','u','user189@gmail.com', '647567467', 1);
     </sql>
     <rollback>
         TRUNCATE TABLE user;
@@ -91,7 +113,8 @@
             INSERT INTO `users_roles` (user_id,role_id)
             VALUES
             (1, 1),
-            (1, 2)
+            (1, 2),
+            (2, 1);
         </sql>
         <rollback>
             TRUNCATE TABLE users_roles;
@@ -99,5 +122,21 @@
 
     </changeSet>
 
-
+    <changeSet id="7" author="arsenii">
+        <sql>
+            create table verification_token (
+            id BIGINT NOT NULL AUTO_INCREMENT,
+            token VARCHAR(255),
+            user_id BIGINT NOT NULL,
+            expiry_date DATE,
+            CONSTRAINT pk_token_id PRIMARY KEY (id),
+            CONSTRAINT `pk_token_id_ref` FOREIGN KEY (user_id)
+            REFERENCES `user` (user_id)
+            ON DELETE NO ACTION ON UPDATE NO ACTION
+            );
+        </sql>
+        <rollback>
+            DROP TABLE verification_token;
+        </rollback>
+    </changeSet>
 </databaseChangeLog>

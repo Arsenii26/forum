@@ -59,10 +59,25 @@ public class PostController {
         return ResponseEntity.ok(discoveryClient.getInstances(serviceId));
     }
 
+    /**
+     * Posts methods
+     */
     // you need create with pagination if you want to limit posts and not load the db
     @GetMapping("/service/all")
     public ResponseEntity<?> findAllPosts(){
         return ResponseEntity.ok(postService.allPosts());
+    }
+    @GetMapping("/service/allLimitedDesc")
+    public ResponseEntity<?> findAllPostsDesc(@RequestParam(name = "page", defaultValue = "0") Integer pageNo,
+                                              @RequestParam(name = "size", defaultValue = "5") Integer pageSize,
+                                              @RequestParam(name = "sort", defaultValue = "post_number") String sortBy){
+        return ResponseEntity.ok(postService.allPostsLimitedDescending(pageNo, pageSize, sortBy));
+    }
+    @GetMapping("/service/allLimitedAsc")
+    public ResponseEntity<?> findAllPostsAsc(@RequestParam(name = "page", defaultValue = "0") Integer pageNo,
+                                             @RequestParam(name = "size", defaultValue = "5") Integer pageSize,
+                                             @RequestParam(name = "sort", defaultValue = "post_number") String sortBy){
+        return ResponseEntity.ok(postService.allPostsLimitedAscending(pageNo, pageSize, sortBy));
     }
 
 
@@ -94,6 +109,9 @@ public class PostController {
         return new ResponseEntity<>(postService.findPostByPostNumber(postNumber), HttpStatus.OK);
     }
 
+    /**
+     * Post details methods
+     */
     @PostMapping("/service/post/{postNumber}/details")
     public ResponseEntity<?> addPostDetails(@RequestBody PostDetails postDetails, @PathVariable Long postNumber){
 
@@ -131,6 +149,8 @@ public class PostController {
 //        System.out.println(userIdList.toString());
         List<User> users = userClient.findUsersIdByUserId(userIdList);
 
+//        System.out.println(users.toString()); // print all taken users for debug
+
         // map for sending multiple Jackson responses
         Map<String, Object> result = new HashMap<String,Object>();
         result.put("postDetails",postDetails);
@@ -141,9 +161,7 @@ public class PostController {
 
     @GetMapping("/service/post/{postNumber}/details/{number}")
     public ResponseEntity<?> showPostDetails(@PathVariable Long postNumber, @PathVariable Long number){
-//        System.out.println("In add mode!");
-
-        //postNumber don't need cuz all numbers in details are unique
+        //we don't need postNumber cuz all numbers in details are unique
         return new ResponseEntity<>(postDetailsService.findPostDetailsByNumber(number), HttpStatus.OK);
 
     }

@@ -1,6 +1,6 @@
 package com.arsenii.usermicroservice.config;
 
-import com.arsenii.usermicroservice.service.UserDetailServiceImpl;
+import com.arsenii.usermicroservice.service.Impl.UserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,7 +66,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("*").allowedOrigins("*")
                 registry.addMapping("/**").allowedOrigins("*")
                         .allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
             }

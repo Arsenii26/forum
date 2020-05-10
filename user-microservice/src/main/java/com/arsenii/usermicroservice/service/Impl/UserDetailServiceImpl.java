@@ -1,4 +1,4 @@
-package com.arsenii.usermicroservice.service;
+package com.arsenii.usermicroservice.service.Impl;
 
 import com.arsenii.usermicroservice.model.Role;
 import com.arsenii.usermicroservice.model.User;

@@ -9,7 +9,7 @@ import java.security.Principal;
 import java.util.List;
 
 /**
- * Client for communicating with second microservice
+ * Client for communicating with the second microservice
  */
 @FeignClient("user-service")
 public interface UserClient {

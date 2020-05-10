@@ -44,8 +44,11 @@
 
     <changeSet id="3" author="arsenii">
     <sql>
-        INSERT INTO post (name, description, date_created, user_id) VALUES('sadfasdfa','kkkkkkkkk', NOW(), 1);
-        INSERT INTO post (name, description, date_created, user_id) VALUES('test2','testttt', NOW(), 1);
+        INSERT INTO post (name, description, date_created, user_id) VALUES('How to write a query?','I trying to make sql query...', NOW(), 1);
+        INSERT INTO post (name, description, date_created, user_id) VALUES('How are you?','Just for test 2', DATE '2014-03-16', 1);
+        INSERT INTO post (name, description, date_created, user_id) VALUES('Hello','Here is description', DATE '2015-12-17', 2);
+        INSERT INTO post (name, description, date_created, user_id) VALUES('Yes','1111', NOW(), 1);
+        INSERT INTO post (name, description, date_created, user_id) VALUES('Microservices?','Does it use the microservices?', NOW(), 2);
     </sql>
     <rollback>
         TRUNCATE TABLE post;

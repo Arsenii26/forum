@@ -3,6 +3,7 @@ package com.arsenii.topicmicroservice.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,13 @@ public class User {
     private String phone;
 
     private boolean enabled=true;
+
+    private boolean picture;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "image_id")
+//    @JsonProperty("data")
+    private Image image;
 
 
 }
